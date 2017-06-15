@@ -1,0 +1,7 @@
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
+activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+configDescList=org.eclipse.launchbar.core.descriptorType.default\:BaseDeDatos
+eclipse.preferences.version=1
+org.eclipse.launchbar.core.descriptorType.default\:BaseDeDatos/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:BaseDeDatos/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
