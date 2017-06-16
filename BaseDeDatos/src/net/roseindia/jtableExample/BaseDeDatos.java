@@ -13,38 +13,62 @@ public class BaseDeDatos implements ActionListener{
 	JLabel label;
 	JButton button;
 	JPanel panel;
+	JLabel salida;
 	static JTable table;
 	
 	String driverName = "oracle.jdbc.driver.OracleDriver";
 	String url="jdbc:oracle:thin:@dbinf.inf.pucp.edu.pe:1521/DBINF";
 	String userName = "A20150087";
 	String password = "w86j19eh";
-	String[] columnNames = {"COUNTRY_ID", "COUNTRY_NAME", "REGION_ID"};
+	String[] columnNames = {"ID", "ID del País", "Nombre del país", "ID de la Región"};
 	
 	public void createUI(){
-		frame = new JFrame("Database Search Result");
+		frame = new JFrame("Resultado de la búsqueda");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		textbox = new JTextField();
-		textbox.setBounds(250,30,150,20); 
-		label = new JLabel("Enter Country Region");
-		label.setBounds(10, 30, 215, 20);
-		button = new JButton("search");
-		button.setBounds(153,331,150,20);
+		textbox.setBounds(273,30,150,20); 
+		label = new JLabel("Ingresa el ID de la región");
+		label.setBounds(53, 30, 150, 20);
+		button = new JButton("Hola qlo");
+		button.setBounds(171,118,150,20);
 		button.addActionListener(this);
+		salida = new JLabel("", SwingConstants.CENTER);
+		salida.setBounds(108, 88, 263, 14);
 		
 		frame.getContentPane().add(textbox);
 		frame.getContentPane().add(label);
 		frame.getContentPane().add(button);
+		frame.getContentPane().add(salida);
+		
 		frame.setVisible(true);
-		frame.setSize(500, 400); 
+		frame.setSize(500, 200); 
 	} 
 	
 	public void actionPerformed(ActionEvent ae){
 		button = (JButton)ae.getSource();
-		System.out.println("Showing Table Data.......");
-		showTableData(); 
-	} 
+		//System.out.println("Showing Table Data.......");
+		//showTableData();
+		showCountry();
+	}
+	
+	public void showCountry(){
+		try{ 
+			Class.forName(driverName); 
+			Connection con = DriverManager.getConnection(url, userName, password);
+			CallableStatement stmt = con.prepareCall("{call prueba2(?,?)}");
+			stmt.setString(1, textbox.getText());
+			stmt.registerOutParameter(2, Types.VARCHAR);
+			stmt.execute();
+			System.out.println("Ejecutando el procedimiento..");
+			salida.setText("El país es: " + stmt.getString(2));
+		}
+		catch(Exception ex){
+			salida.setText("El pais no esta en la base de datos");
+			/*JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+			JOptionPane.ERROR_MESSAGE);*/
+		}
+	}
 	
 	public void showTableData(){
 		frame1 = new JFrame("Database Search Result");
@@ -71,16 +95,16 @@ public class BaseDeDatos implements ActionListener{
 		try{ 
 			Class.forName(driverName); 
 			Connection con = DriverManager.getConnection(url, userName, password);
-			String sql = "select * from COUNTRIES where REGION_ID = " +textvalue;
+			String sql = "prueba( " +textvalue+")";
 			PreparedStatement ps = con.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			int i =0;
 			while(rs.next()){
+				i++;
 				countryID = rs.getString("COUNTRY_ID");
 				countryName = rs.getString("COUNTRY_NAME");
 				regionID = rs.getString("REGION_ID"); 
-				model.addRow(new Object[]{countryID, countryName, regionID});
-				i++; 
+				model.addRow(new Object[]{i, countryID, countryName, regionID}); 
 			}
 			if(i <1){
 				JOptionPane.showMessageDialog(null, "No Record Found","Error",
